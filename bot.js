@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
-const prefix = '#';
+const prefix = '-';
 client.on('ready', () => {
   console.log(`System Bot is Online`);
 
@@ -10,83 +10,54 @@ client.on('ready', () => {
 
 
 
-client.on("ready", () => {
 
-    var guild;
 
-    while (!guild)
+ client.on('ready', () => {
+  console.log(`Logged in as ${client.user.tag}!`);
+client.user.setGame(`Quietness Server`,"http://twitch.tv/S-F")
+  console.log('Online..,!!')
+});
 
-        guild = client.guilds.get("509810371385884684");
 
-    guild.fetchInvites().then((data) => {
 
-        data.forEach((Invite, key, map) => {
+client.on('message', message => {
+if (message.content.split(' ')[0] == '-bc')
+ message.guild.members.forEach( member => {
+         if (!message.member.hasPermission("ADMINISTRATOR"))  return;
+member.send( `${member} ` + "\n" + message.content.substr(3));
+                                                            message.delete();
+});
+});
 
-            var Inv = Invite.code;
 
-            dat[Inv] = Invite.uses;
 
+client.on('message',async message => {
+  if(message.author.bot || message.channel.type === '-Qbc') return;
+  let args = message.content.split(' ');
+  if(args[0] === `#Qbc`) {
+    if(!message.member.hasPermission("MANAGE_GUILD")) return message.channel.send('- **أنت لا تملك الصلاحيات اللازمة لأستخدام هذا الأمر**');
+    if(!args[1]) return message.channel.send('- **يجب عليك كتابة الرسالة بعد الأمر**');
+ 
+    let msgCount = 0;
+    let errorCount = 0;
+    let successCount = 0;
+    message.channel.send(`**- [ :bookmark: :: ${msgCount} ] ・عدد الرسائل المرسلة**\n**- [ :inbox_tray: :: ${successCount} ] ・عدد الرسائل المستلمة**\n**- [ :outbox_tray: :: ${errorCount} ]・عدد الرسائل الغير مستلمة**`).then(msg => {
+      message.guild.members.forEach(g => {
+        g.send(args.slice(1).join(' ')).then(() => {
+          successCount++;
+          msgCount++;
+          msg.edit(`**- [ :bookmark: :: ${msgCount} ] ・عدد الرسائل المرسلة**\n**- [ :inbox_tray: :: ${successCount} ] ・عدد الرسائل المستلمة**\n**- [ :outbox_tray: :: ${errorCount} ]・عدد الرسائل الغير مستلمة**`);
+        }).catch(e => {
+          errorCount++;
+          msgCount++;
+          msg.edit(`**- [ :bookmark: :: ${msgCount} ] ・عدد الرسائل المرسلة**\n**- [ :inbox_tray: :: ${successCount} ] ・عدد الرسائل المستلمة**\n**- [ :outbox_tray: :: ${errorCount} ]・عدد الرسائل الغير مستلمة**`);
         });
-
+      });
     });
-
+  }
 });
 
  
-
- 
-
- 
-
-client.on("guildMemberAdd", (member) => {
-
-    let channel = member.guild.channels.get("509812306058805288");
-
-    if (!channel) {
-
-        console.log("!the channel id it's not correct");
-
-        return;
-
-    }
-
-    if (member.id == client.user.id) {
-
-        return;
-
-    }
-
-    console.log('-');
-
-    var guild;
-
-    while (!guild)
-
-        guild = client.guilds.get("509810371385884684");
-
-    guild.fetchInvites().then((data) => {
-
-        data.forEach((Invite, key, map) => {
-
-            var Inv = Invite.code;
-
-            if (dat[Inv])
-
-                if (dat[Inv] < Invite.uses) {
-
- channel.send(`**Invited By ${Invite.inviter}. `) ;        
-
- }
-
-            dat[Inv] = Invite.uses;
-
-       
-
-       });
-
-    });
-
-});
 
 
 
